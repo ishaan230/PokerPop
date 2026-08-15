@@ -106,7 +106,20 @@ const Table = ({ gameState, socketId, onAction, onStart, onAdminAction }) => {
         <div className="room-info" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span>Room: {gameState.roomId}</span>
           <button 
-            onClick={() => navigator.clipboard.writeText(gameState.roomId)}
+            onClick={() => {
+              if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(gameState.roomId);
+              } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = gameState.roomId;
+                textArea.style.position = "fixed";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try { document.execCommand('copy'); } catch (err) {}
+                document.body.removeChild(textArea);
+              }
+            }}
             style={{ background: 'transparent', border: '1px solid var(--gold)', color: 'var(--gold)', borderRadius: '4px', cursor: 'pointer', padding: '2px 6px', fontSize: '12px' }}
             title="Copy Room Code"
           >

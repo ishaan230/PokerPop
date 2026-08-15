@@ -20,10 +20,16 @@ function App() {
   useEffect(() => {
     socket.on('gameStateUpdate', (state) => {
       setGameState(state);
+      setInGame(true);
+    });
+
+    socket.on('joinError', (errorMsg) => {
+      alert(errorMsg);
     });
 
     return () => {
       socket.off('gameStateUpdate');
+      socket.off('joinError');
     };
   }, []);
 
@@ -31,8 +37,7 @@ function App() {
     e?.preventDefault();
     const targetRoom = generatedRoomId || roomId;
     if (targetRoom && playerName) {
-      socket.emit('joinRoom', { roomId: targetRoom, playerName });
-      setInGame(true);
+      socket.emit('joinRoom', { roomId: targetRoom, playerName, isCreating: !!generatedRoomId });
     }
   };
 
@@ -124,6 +129,12 @@ function App() {
             <button type="submit" className="join-btn">Join</button>
             <button type="button" className="join-btn back-btn" onClick={() => setLobbyMode('MENU')} style={{marginTop: '10px', background: '#444'}}>Back</button>
           </form>
+        )}
+        
+        {typeof __BUILD_INFO__ !== 'undefined' && (
+          <div style={{ marginTop: '20px', fontSize: '10px', color: '#666', textAlign: 'center' }}>
+            Branch: {__BUILD_INFO__.branch} | Built: {__BUILD_INFO__.buildTime}
+          </div>
         )}
       </div>
     </div>

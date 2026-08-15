@@ -26,15 +26,23 @@ const games = {}; // roomId -> GameState
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
-    socket.on('joinRoom', ({ roomId, playerName }) => {
-        socket.join(roomId);
+    socket.on('joinRoom', ({ roomId, playerName, isCreating }) => {
         let isFirstPlayer = false;
         if (!games[roomId]) {
+            if (!isCreating) {
+                socket.emit('joinError', 'Room does not exist!');
+                return;
+            }
             games[roomId] = new GameState(roomId);
             isFirstPlayer = true;
+        } else if (isCreating) {
+            socket.emit('joinError', 'Room already exists. Please try again.');
+            return;
         } else if (games[roomId].players.length === 0) {
             isFirstPlayer = true;
         }
+
+        socket.join(roomId);
 
         const game = games[roomId];
         const newPlayer = new Player(socket.id, playerName);
