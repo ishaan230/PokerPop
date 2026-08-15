@@ -42,7 +42,6 @@ class GameState {
         this.communityCards = [];
         this.pot = 0;
         this.currentHighestBet = 0;
-        this.roundActions = 0;
         this.actionHistory = ['--- PREFLOP ---'];
 
         this.players.forEach(p => p.resetForNewHand());
@@ -73,19 +72,18 @@ class GameState {
         player.currentBet += actualAmount;
         this.pot += actualAmount;
         
-        if (player.currentBet > this.currentHighestBet) {
-            this.currentHighestBet = player.currentBet;
+        if (amount > 0) {
+            this.currentHighestBet = Math.max(this.currentHighestBet, player.currentBet);
         }
-
-        if (player.chips === 0) {
-            player.isAllIn = true;
-        }
+        
         return actualAmount;
     }
 
     handleAction(playerId, action, amount = 0) {
         const player = this.players[this.currentPlayerIndex];
         if (player.id !== playerId) return false; // not their turn
+
+        player.actedThisRound = true;
 
         if (action === 'FOLD') {
             player.hasFolded = true;
@@ -95,6 +93,9 @@ class GameState {
             if (callAmount > 0) {
                 this.placeBet(player, callAmount);
                 this.actionHistory.push(`${player.name} Calls ${callAmount}`);
+            } else {
+                // Treated as a check
+                this.actionHistory.push(`${player.name} Checks`);
             }
         } else if (action === 'CHECK') {
             const callAmount = this.currentHighestBet - player.currentBet;
@@ -109,7 +110,6 @@ class GameState {
             this.actionHistory.push(`${player.name} Raises to ${player.currentBet}`);
         }
 
-        this.roundActions++;
         this.advanceTurn();
         return true;
     }
@@ -123,7 +123,7 @@ class GameState {
         // 1. Only 1 player hasn't folded (everyone else folded)
         // OR
         // 2. No one needs to call AND everyone has had a chance to act
-        const everyoneActed = this.roundActions >= nonFoldedPlayers.length;
+        const everyoneActed = nonFoldedPlayers.every(p => p.actedThisRound || p.isAllIn);
         
         if (nonFoldedPlayers.length <= 1 || (playersNeedingToCall.length === 0 && everyoneActed)) {
             this.nextStage();
@@ -137,9 +137,11 @@ class GameState {
 
     nextStage() {
         // Reset bets for new round
-        this.players.forEach(p => p.currentBet = 0);
+        this.players.forEach(p => {
+            p.currentBet = 0;
+            p.actedThisRound = false;
+        });
         this.currentHighestBet = 0;
-        this.roundActions = 0;
         // actionHistory is kept for the whole hand, only reset in startNewHand
 
         if (this.players.filter(p => !p.hasFolded).length === 1) {

@@ -11,6 +11,7 @@ class Player {
         this.isAllIn = false;
         this.socketId = null; // null for AI
         this.isAdmin = false;
+        this.actedThisRound = false;
     }
 
     resetForNewHand() {
@@ -19,6 +20,7 @@ class Player {
         this.hasFolded = false;
         this.isAllIn = this.chips === 0;
         this.isWinner = false;
+        this.actedThisRound = false;
     }
 }
 
