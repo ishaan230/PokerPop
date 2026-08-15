@@ -77,8 +77,11 @@ const Table = ({ gameState, socketId, onAction, onStart, onAdminAction }) => {
           {/* Render Players around the table */}
           {players.map((player, idx) => {
             const isCurrent = idx === currentPlayerIndex && stage !== 'SHOWDOWN' && stage !== 'WAITING';
-            // Calculate position (simplified for demo, 9 positions around oval)
-            const angle = (idx / Math.max(players.length, 1)) * Math.PI * 2 - Math.PI / 2;
+            // Offset so that the current user is always seated at the bottom (angle = PI/2)
+            const effectiveMyIndex = myPlayerIndex !== -1 ? myPlayerIndex : 0;
+            const offsetIdx = (idx - effectiveMyIndex + players.length) % players.length;
+            const angle = (offsetIdx / Math.max(players.length, 1)) * Math.PI * 2 + Math.PI / 2;
+            
             const rx = 400; // x radius
             const ry = 200; // y radius
             const x = Math.cos(angle) * rx;
@@ -120,18 +123,18 @@ const Table = ({ gameState, socketId, onAction, onStart, onAdminAction }) => {
             <h4 style={{ color: 'var(--gold)', margin: '10px 0 5px 0' }}>Admin Controls</h4>
             <div className="admin-row">
               <label>Starting Chips: </label>
-              <input type="number" value={startingChips} onChange={e => setStartingChips(parseInt(e.target.value) || 1000)} style={{ width: '60px' }} />
-              <button onClick={() => onAdminAction('updateStartingChips', { amount: startingChips })} style={{ marginLeft: '5px' }}>Set</button>
+              <input type="number" value={startingChips} onChange={e => setStartingChips(e.target.value)} style={{ width: '60px' }} />
+              <button onClick={() => onAdminAction('updateStartingChips', { amount: parseInt(startingChips) || 1000 })} style={{ marginLeft: '5px' }}>Set</button>
             </div>
             <div className="admin-row" style={{ marginTop: '5px' }}>
               <label>Bots: </label>
-              <input type="number" min="1" max="8" value={botCount} onChange={e => setBotCount(parseInt(e.target.value) || 1)} style={{ width: '40px' }} />
+              <input type="number" min="1" max="8" value={botCount} onChange={e => setBotCount(e.target.value)} style={{ width: '40px' }} />
               <select value={botDifficulty} onChange={e => setBotDifficulty(e.target.value)} style={{ marginLeft: '5px' }}>
                 <option value="EASY">Easy</option>
                 <option value="MEDIUM">Med</option>
                 <option value="HARD">Hard</option>
               </select>
-              <button onClick={() => onAdminAction('addAIBots', { count: botCount, difficulty: botDifficulty })} style={{ marginLeft: '5px' }}>Add</button>
+              <button onClick={() => onAdminAction('addAIBots', { count: parseInt(botCount) || 1, difficulty: botDifficulty })} style={{ marginLeft: '5px' }}>Add</button>
             </div>
             {players.length >= 2 && (
               <button className="start-btn" onClick={onStart} style={{ marginTop: '15px' }}>Start Game</button>
@@ -172,7 +175,11 @@ const Table = ({ gameState, socketId, onAction, onStart, onAdminAction }) => {
                 max={calculatedMaxRaise}
                 value={customRaise}
                 onChange={e => {
-                  const val = parseInt(e.target.value) || minRaiseClamped;
+                  setCustomRaise(e.target.value);
+                }}
+                onBlur={e => {
+                  let val = parseInt(e.target.value);
+                  if (isNaN(val)) val = minRaiseClamped;
                   setCustomRaise(Math.min(Math.max(val, minRaiseClamped), calculatedMaxRaise));
                 }}
                 className="raise-number-input"
@@ -181,7 +188,10 @@ const Table = ({ gameState, socketId, onAction, onStart, onAdminAction }) => {
             </div>
             <button 
               className="action-btn raise" 
-              onClick={() => onAction('RAISE', customRaise)}
+              onClick={() => {
+                const finalRaise = parseInt(customRaise) || minRaiseClamped;
+                onAction('RAISE', Math.min(Math.max(finalRaise, minRaiseClamped), calculatedMaxRaise));
+              }}
               disabled={calculatedMaxRaise <= Math.max(0, currentHighestBet - (myPlayer?.currentBet || 0))}
             >
               Raise

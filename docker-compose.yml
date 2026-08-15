@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    # The server port is no longer exposed to the host machine to avoid port conflicts! 
+    # Nginx will securely talk to it on the internal Docker network.
+    environment:
+      - NODE_ENV=production
+    restart: always
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "8025:80" # Expose the app on port 8025 of the host machine
+    depends_on:
+      - server
+    restart: always

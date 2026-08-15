@@ -3,7 +3,8 @@ import io from 'socket.io-client';
 import Table from './components/Table';
 import './App.css';
 
-const socket = io('http://localhost:3001');
+const socketUrl = import.meta.env.PROD ? '/' : 'http://localhost:3001';
+const socket = io(socketUrl);
 
 function generateRoomId() {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
