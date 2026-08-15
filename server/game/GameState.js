@@ -72,6 +72,11 @@ class GameState {
         player.currentBet += actualAmount;
         this.pot += actualAmount;
         
+        if (player.chips === 0) {
+            player.isAllIn = true;
+            this.actionHistory.push(`${player.name} is All-In!`);
+        }
+        
         if (amount > 0) {
             this.currentHighestBet = Math.max(this.currentHighestBet, player.currentBet);
         }
