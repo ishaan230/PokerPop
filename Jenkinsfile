@@ -19,6 +19,9 @@ pipeline {
                     echo "Cloning PokerPop repository..."
                     git clone --branch v1.0.0 https://\${GIT_USER}:\${GIT_TOKEN}@${env.REPO_URL.replace("https://", "")} \${REPO_DIR}
                     
+                    cd \${REPO_DIR}
+                    git rev-parse --abbrev-ref HEAD > client/.git-branch
+                    
                     echo "--- PokerPop repository cloned successfully. ---"
                     """
                 }
