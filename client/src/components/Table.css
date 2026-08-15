@@ -1,0 +1,250 @@
+.table-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.poker-table {
+  width: 900px;
+  height: 450px;
+  background: var(--table-border); /* wooden border */
+  border-radius: 250px;
+  padding: 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 5px 15px rgba(255,255,255,0.1);
+  position: relative;
+}
+
+.table-felt {
+  width: 100%;
+  height: 100%;
+  background: var(--felt-green);
+  border-radius: 230px;
+  box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid rgba(255,255,255,0.1);
+}
+
+.pot-area {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.pot-display {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 5px 15px;
+  border-radius: 20px;
+  border: 1px solid var(--gold);
+}
+
+.pot-label {
+  font-size: 10px;
+  color: #aaa;
+  letter-spacing: 1px;
+}
+
+.pot-amount {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--gold);
+}
+
+.community-cards {
+  display: flex;
+  gap: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.player-seat {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* Transform applied inline */
+  z-index: 10;
+}
+
+.game-info-panel {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(15, 20, 25, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 12px;
+  width: 250px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.room-info {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  padding-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.history-log {
+  font-size: 12px;
+  color: #aaa;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 120px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold) rgba(0,0,0,0.3);
+  padding-right: 5px;
+}
+
+.history-log::-webkit-scrollbar {
+  width: 6px;
+}
+.history-log::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.3);
+  border-radius: 4px;
+}
+.history-log::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 4px;
+}
+
+.log-entry {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.log-divider {
+  color: var(--gold);
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin: 4px 0;
+  border-bottom: 1px dashed rgba(212, 175, 55, 0.3);
+  padding-bottom: 4px;
+}
+
+.start-btn {
+  margin-top: 15px;
+  width: 100%;
+  padding: 10px;
+  background: var(--gold);
+  color: #000;
+  pointer-events: auto;
+}
+
+.action-bar {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  padding: 15px 25px;
+  border-radius: 12px;
+  display: flex;
+  gap: 15px;
+  border: 1px solid #444;
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+  z-index: 100;
+}
+
+.action-btn {
+  padding: 10px 25px;
+  font-size: 16px;
+  border-radius: 6px;
+  min-width: 100px;
+  text-transform: uppercase;
+}
+
+.fold { background: #c92a2a; color: white; }
+.call { background: #1864ab; color: white; }
+.raise { background: #d4af37; color: black; height: 100%; }
+
+.raise-group {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.raise-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 5px 15px;
+  border-radius: 6px;
+  border: 1px solid #444;
+}
+
+.raise-slider {
+  width: 100px;
+  cursor: pointer;
+  accent-color: var(--gold);
+}
+
+.raise-amount-display {
+  color: var(--gold);
+  font-weight: bold;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.admin-controls {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 13px;
+}
+.admin-row {
+  display: flex;
+  align-items: center;
+  color: #ccc;
+}
+.admin-row input, .admin-row select {
+  background: #222;
+  border: 1px solid #444;
+  color: white;
+  padding: 3px;
+  border-radius: 4px;
+}
+.admin-row button {
+  background: #444;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.admin-row button:hover {
+  background: var(--gold);
+  color: black;
+}
+
+/* Hide number input spinner arrows */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+}

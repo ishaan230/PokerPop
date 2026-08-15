@@ -1,0 +1,96 @@
+.lobby-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: radial-gradient(circle at center, #113620, #0a1c12);
+}
+
+.lobby-card {
+  background: rgba(20, 20, 20, 0.95);
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  padding: 40px;
+  width: 400px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  text-align: center;
+}
+
+.lobby-card h1 {
+  color: var(--gold);
+  font-family: 'Georgia', serif;
+  margin-bottom: 30px;
+  font-size: 32px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #ccc;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-group input[type="text"],
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: white;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.form-group input[type="text"]:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.ai-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.ai-toggle input {
+  margin-right: 10px;
+  transform: scale(1.2);
+}
+
+.join-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(to bottom, #d4af37, #b8860b);
+  color: #111;
+  font-size: 16px;
+  border-radius: 6px;
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.game-container {
+  flex: 1;
+  display: flex;
+  position: relative;
+  background: radial-gradient(circle at center, rgba(30, 20, 25, 1) 0%, rgba(10, 5, 10, 1) 100%);
+  background-image: 
+    radial-gradient(circle at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.loading {
+  color: var(--gold);
+  font-size: 24px;
+  margin: auto;
+  font-family: 'Georgia', serif;
+}
