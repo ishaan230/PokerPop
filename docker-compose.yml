@@ -16,7 +16,7 @@ services:
       context: ./client
       dockerfile: Dockerfile
     ports:
-      - "8025:80" # Expose the app on port 8025 of the host machine
+      - "${APP_PORT:-8025}:80" # Expose the app on port defined by APP_PORT or 8025 of the host machine
     depends_on:
       - server
     restart: always
