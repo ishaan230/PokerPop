@@ -13,6 +13,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Root & Health check routes for deployment platforms like Render
+app.get('/', (req, res) => {
+    res.send('Poker server is up and running!');
+});
+app.get('/health', (req, res) => {
+    res.status(200).send('OK');
+});
+
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {

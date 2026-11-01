@@ -3,7 +3,11 @@ import io from 'socket.io-client';
 import Table from './components/Table';
 import './App.css';
 
-const socketUrl = import.meta.env.PROD ? '/' : 'http://localhost:3001';
+let backendUrl = import.meta.env.VITE_BACKEND_URL;
+if (backendUrl && !backendUrl.startsWith('http://') && !backendUrl.startsWith('https://')) {
+  backendUrl = `https://${backendUrl}`;
+}
+const socketUrl = backendUrl || (import.meta.env.PROD ? '/' : 'http://localhost:3001');
 const socket = io(socketUrl);
 
 function generateRoomId() {
