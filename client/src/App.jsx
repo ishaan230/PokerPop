@@ -4,8 +4,14 @@ import Table from './components/Table';
 import './App.css';
 
 let backendUrl = import.meta.env.VITE_BACKEND_URL;
-if (backendUrl && !backendUrl.startsWith('http://') && !backendUrl.startsWith('https://')) {
-  backendUrl = `https://${backendUrl}`;
+if (backendUrl) {
+  // If Render passed an internal service name without a domain extension (e.g. "poker-server-5dvm")
+  if (!backendUrl.includes('.') && !backendUrl.includes('localhost')) {
+    backendUrl = `${backendUrl}.onrender.com`;
+  }
+  if (!backendUrl.startsWith('http://') && !backendUrl.startsWith('https://')) {
+    backendUrl = `https://${backendUrl}`;
+  }
 }
 const socketUrl = backendUrl || (import.meta.env.PROD ? '/' : 'http://localhost:3001');
 const socket = io(socketUrl);
@@ -22,6 +28,14 @@ function App() {
   const [playerName, setPlayerName] = useState('');
 
   useEffect(() => {
+    socket.on('connect', () => {
+      console.log('Successfully connected to poker server:', socket.id);
+    });
+
+    socket.on('connect_error', (err) => {
+      console.error('Socket connection error:', err.message);
+    });
+
     socket.on('gameStateUpdate', (state) => {
       setGameState(state);
       setInGame(true);
@@ -32,6 +46,8 @@ function App() {
     });
 
     return () => {
+      socket.off('connect');
+      socket.off('connect_error');
       socket.off('gameStateUpdate');
       socket.off('joinError');
     };
