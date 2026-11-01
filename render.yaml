@@ -4,6 +4,8 @@ services:
     name: poker-server
     runtime: node
     plan: free
+    branch: v1.0.0
+    autoDeploy: true
     rootDir: server
     buildCommand: npm install
     startCommand: node index.js
@@ -16,6 +18,8 @@ services:
   - type: web
     name: poker-client
     runtime: static
+    branch: v1.0.0
+    autoDeploy: true
     rootDir: client
     buildCommand: npm install && npm run build
     staticPublishPath: dist
